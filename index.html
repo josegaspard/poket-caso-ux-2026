@@ -197,6 +197,14 @@ footer{padding:28px 0 40px;font-size:15px;color:#4a4943;background:var(--yellow)
   .hero-phones .phone:nth-child(2){transform:translateY(-18px)}
   .pant{gap:16px}
   .wf{min-height:340px}
+  .res table,.res tbody,.res tr,.res td{display:block;width:100%}
+  .res thead{display:none}
+  .res tr{padding:14px 16px;border-bottom:1px solid var(--line)}
+  .res tr:last-child{border-bottom:0}
+  .res td{border:0;padding:3px 0}
+  .res td:first-child{font-weight:600;margin-bottom:4px}
+  .res td:nth-child(2)::before{content:"Antes: ";color:var(--muted)}
+  .res td:nth-child(3)::before{content:"Después: ";color:var(--muted);font-weight:400}
 }
 </style>
 </head>
