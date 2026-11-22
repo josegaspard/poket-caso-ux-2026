@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Poket — crear y editar sin perderse</title>
+<meta name="description" content="Caso de estudio del rediseño de las etapas de crear y editar en Poket: cuenta, invitaciones, link en bio y tienda online.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --yellow:#ffdf3f;--yellow2:#fff3b0;--ink:#161513;--cream:#f7f6f2;--white:#ffffff;
+  --line:#e9e6df;--muted:#5e5d59;--green:#0aa14a;
+  --wrap:1180px;--gut:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--cream);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:18px;line-height:1.5;font-kerning:normal;overflow-x:clip}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
+section{padding:96px 0}
+h1,h2,h3{font-weight:800;line-height:1.08;letter-spacing:-.01em}
+h1{font-size:clamp(40px,7vw,88px)}
+h2{font-size:clamp(32px,4.6vw,56px);margin-bottom:20px}
+h3{font-size:22px;line-height:1.2;margin-bottom:8px}
+p{max-width:62ch}
+.lead{font-size:clamp(19px,2.1vw,23px);color:var(--muted);max-width:56ch}
+.muted{color:var(--muted)}
+.sm{font-size:16px}
+
+/* portada */
+.top{display:flex;align-items:center;gap:10px;padding:22px 0}
+.logo{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:22px;text-decoration:none}
+.logo i{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--ink);color:var(--yellow);font-style:normal;font-size:18px}
+.hero{padding:40px 0 0;background:var(--yellow)}
+.hero h1{max-width:13ch}
+.hero .lead{color:#3b3a36;margin-top:22px}
+.hero-phones{display:flex;justify-content:center;align-items:flex-end;gap:clamp(12px,3vw,40px);margin-top:64px;padding-bottom:0;overflow:hidden}
+.hero-phones .phone:nth-child(2){transform:translateY(-36px)}
+
+/* teléfono */
+.phone{width:min(300px,30vw);min-width:150px;border-radius:38px;padding:9px;background:var(--ink);box-shadow:0 30px 60px -30px rgba(22,21,19,.45);flex:none}
+.phone img{border-radius:30px;aspect-ratio:390/844;object-fit:cover;object-position:top;width:100%;background:var(--white)}
+.browser{border-radius:14px;overflow:hidden;background:var(--white);box-shadow:0 30px 70px -36px rgba(22,21,19,.5);border:1px solid var(--line)}
+.browser .bar{height:34px;background:#efede7;display:flex;align-items:center;gap:7px;padding:0 14px}
+.browser .bar b{width:11px;height:11px;border-radius:50%;background:#d6d3cb}
+.browser img{width:100%}
+
+/* ficha */
+.ficha{background:var(--white)}
+.ficha dl{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:8px}
+.ficha dt{font-size:15px;color:var(--muted);margin-bottom:4px}
+.ficha dd{font-weight:600;font-size:19px;line-height:1.35}
+.ficha .ctx{margin-top:44px}
+
+/* reto */
+.reto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:48px}
+.reto-item .phone{width:100%;max-width:300px;margin:0 auto 22px}
+.reto-item ol{padding-left:22px;font-size:16px}
+.reto-item li{margin-bottom:8px}
+.reto-item li::marker{font-weight:800}
+
+/* objetivos */
+.obj{background:var(--ink);color:var(--white)}
+.obj .lead{color:#c9c6bd}
+.obj-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
+.obj-card{background:#23221f;border-radius:20px;padding:26px}
+.obj-card b{display:block;font-size:44px;line-height:1;color:var(--yellow);margin-bottom:12px}
+.obj-card p{font-size:16px;color:#e7e4db}
+
+/* research */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+.card{background:var(--white);border-radius:20px;padding:26px}
+.card .num{font-size:46px;font-weight:800;line-height:1;margin-bottom:10px}
+.card p{font-size:16px;color:var(--muted)}
+.card .src{font-size:14px;margin-top:10px;color:#7a7872}
+
+/* flujos */
+.flujo{display:grid;grid-template-columns:140px 1fr;gap:16px 22px;align-items:start;margin-top:36px}
+.flujo h3{font-size:19px;margin:6px 0 0}
+.pasos{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.paso{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:16px;line-height:1.3}
+.paso.mal{background:#fff0ec;border-color:#f6cfc4}
+.paso.bien{background:var(--yellow2);border-color:#f1dd7a}
+.flecha{color:#9a978f;font-weight:800}
+
+/* wireframes */
+.wf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:44px}
+.wf{background:var(--white);border-radius:24px;padding:22px;min-height:420px;display:flex;flex-direction:column;gap:12px}
+.wf .t{height:22px;width:70%;background:#d9d6ce;border-radius:6px}
+.wf .s{height:12px;width:90%;background:#ebe8e1;border-radius:5px}
+.wf .row{display:flex;gap:8px;align-items:center}
+.wf .n{width:28px;height:28px;border-radius:50%;background:var(--ink);flex:none}
+.wf .n.o{background:#ebe8e1}
+.wf .f{height:44px;background:#f2f0ea;border-radius:12px}
+.wf .btn{height:48px;background:var(--ink);border-radius:999px;margin-top:auto}
+.wf .chip{height:30px;width:96px;border-radius:999px;background:#ebe8e1}
+.wf .chip.on{background:var(--ink)}
+.wf .bar{height:10px;border-radius:5px;background:#ebe8e1;overflow:hidden}
+.wf .bar i{display:block;height:100%;width:67%;background:var(--green)}
+.wf figcaption{font-size:16px;color:var(--muted);margin-top:4px}
+
+/* sistema */
+.sistema{background:var(--white)}
+.pal{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-top:36px}
+.sw{border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.sw i{display:block;height:96px}
+.sw div{padding:10px 12px;font-size:15px;line-height:1.3}
+.sw b{display:block;font-weight:600}
+.tipo{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;margin-top:64px;align-items:end}
+.tipo .aa{font-size:clamp(90px,14vw,170px);font-weight:800;line-height:.9}
+.tipo ul{list-style:none;display:grid;gap:14px}
+.tipo li span{display:block;font-size:15px;color:var(--muted)}
+.comp{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:56px}
+.b1{background:var(--ink);color:var(--white);border:0;border-radius:999px;padding:14px 26px;font:600 17px/1 "Bricolage Grotesque",sans-serif;min-height:48px}
+.b2{background:var(--white);color:var(--ink);border:1px solid #d6d3cb;border-radius:999px;padding:14px 24px;font:600 17px/1 "Bricolage Grotesque",sans-serif;min-height:48px}
+.estado{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:16px;color:var(--green)}
+.estado::before{content:"";width:9px;height:9px;border-radius:50%;background:currentColor}
+.step{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:8px 18px 8px 8px;background:var(--ink);color:var(--white);font-weight:600;font-size:16px}
+.step i{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--yellow);color:var(--ink);font-style:normal;font-weight:800}
+.grid-note{margin-top:28px;font-size:16px;color:var(--muted)}
+
+/* pantallas */
+.pant-grupo{margin-top:56px}
+.pant-grupo h3{margin-bottom:6px}
+.pant{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:26px}
+.pant .phone{width:100%}
+.pant figcaption{font-size:16px;color:var(--muted);margin-top:12px;text-align:center}
+.wide{margin-top:40px}
+
+/* antes / después */
+.ad{background:var(--ink);color:var(--white)}
+.ad .lead{color:#c9c6bd}
+.ad-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:48px}
+.cmp{position:relative;width:100%;max-width:340px;margin:0 auto;border-radius:38px;padding:9px;background:#000}
+.cmp .vw{position:relative;border-radius:30px;overflow:hidden;aspect-ratio:390/844;background:var(--white)}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+.cmp .despues{clip-path:inset(0 0 0 var(--x,50%))}
+.cmp .linea{position:absolute;top:0;bottom:0;left:var(--x,50%);width:3px;background:var(--yellow);transform:translateX(-1.5px);pointer-events:none}
+.cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.cmp-et{display:flex;justify-content:space-between;max-width:340px;margin:14px auto 0;font-size:16px;color:#c9c6bd}
+
+/* motion */
+.motion-demo{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:44px}
+.md{background:var(--white);border-radius:24px;padding:32px;min-height:220px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.save{position:relative;height:28px}
+.save span{position:absolute;left:0;top:0;font-weight:600;font-size:17px;display:inline-flex;align-items:center;gap:8px;opacity:0;animation:ciclo 4s infinite}
+.save span::before{content:"";width:9px;height:9px;border-radius:50%;background:currentColor}
+.save .g1{color:#8a877f}
+.save .g2{color:var(--green);animation-delay:2s}
+@keyframes ciclo{0%,5%{opacity:0;transform:translateY(4px)}10%,45%{opacity:1;transform:none}50%,100%{opacity:0}}
+.campo-anim{height:46px;border-radius:12px;background:#f2f0ea;position:relative;overflow:hidden}
+.campo-anim::after{content:"Valeria";position:absolute;left:14px;top:12px;font-size:17px;width:0;overflow:hidden;white-space:nowrap;animation:escribe 4s steps(7) infinite}
+@keyframes escribe{0%,8%{width:0}40%,100%{width:64px}}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips span{border-radius:999px;padding:10px 16px;font-weight:600;font-size:16px;background:#f2f0ea;animation:act 6s infinite}
+.chips span:nth-child(2){animation-delay:1.5s}.chips span:nth-child(3){animation-delay:3s}.chips span:nth-child(4){animation-delay:4.5s}
+@keyframes act{0%,24%{background:var(--ink);color:var(--white)}25%,100%{background:#f2f0ea;color:var(--ink)}}
+@media (prefers-reduced-motion:reduce){.save span,.campo-anim::after,.chips span{animation:none}.save .g2{opacity:1}.campo-anim::after{width:64px}}
+
+/* resultados */
+.res table{width:100%;border-collapse:collapse;margin-top:36px;font-size:17px;font-variant-numeric:tabular-nums;background:var(--white);border-radius:20px;overflow:hidden}
+.res th,.res td{text-align:left;padding:16px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+.res th{font-size:15px;color:var(--muted);font-weight:600}
+.res td:nth-child(3){font-weight:600}
+.res tr:last-child td{border-bottom:0}
+.tbl{overflow-x:auto;border-radius:20px}
+.nota{margin-top:22px;font-size:16px;color:var(--muted)}
+
+/* cierre */
+.cierre{background:var(--yellow);text-align:left}
+.cierre .b1{display:inline-block;text-decoration:none;margin-top:28px;line-height:20px}
+.cred{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:48px;font-size:17px}
+.cred dt{font-size:15px;color:#4a4943}
+.cred dd{font-weight:600}
+footer{padding:28px 0 40px;font-size:15px;color:#4a4943;background:var(--yellow)}
+
+/* responsive */
+@media (max-width:980px){
+  .ficha dl,.obj-grid{grid-template-columns:1fr 1fr}
+  .cards,.wf-grid{grid-template-columns:1fr 1fr}
+  .pant{grid-template-columns:1fr 1fr}
+  .pal{grid-template-columns:repeat(4,1fr)}
+  .reto-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  section{padding:64px 0}
+  .ficha dl,.obj-grid,.cards,.wf-grid,.reto-grid,.ad-grid,.motion-demo,.tipo,.cred{grid-template-columns:1fr}
+  .pal{grid-template-columns:repeat(2,1fr)}
+  .flujo{grid-template-columns:1fr;gap:10px}
+  .hero-phones{gap:10px;margin-top:40px}
+  .hero-phones .phone{min-width:0;width:31vw;border-radius:20px;padding:5px}
+  .hero-phones .phone img{border-radius:16px}
+  .hero-phones .phone:nth-child(2){transform:translateY(-18px)}
+  .pant{gap:16px}
+  .wf{min-height:340px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="top"><a class="logo" href="https://poket.me"><i>P</i>poket</a></div>
+    <h1>Poket: crear y editar sin perderse</h1>
+    <p class="lead">Rediseño de las etapas en las que la gente se iba sin publicar: crear la cuenta, editar una invitación o un link en bio y armar una tienda online. Todo en el teléfono y con lo que de verdad necesita cada tipo de página.</p>
+    <div class="hero-phones">
+      <div class="phone"><img src="img/crear-despues-boda-390.webp" alt="Paso de datos del evento en el nuevo creador de Poket" width="780" height="1688"></div>
+      <div class="phone"><img src="img/editor-despues-xv.webp" alt="Editor de invitación de XV años con guía por pasos" width="780" height="1688"></div>
+      <div class="phone"><img src="img/tienda-despues-compartir.webp" alt="Hoja Compartir mi tienda" width="780" height="1688"></div>
+    </div>
+  </div>
+</header>
+
+<section class="ficha">
+  <div class="wrap">
+    <h2>Ficha</h2>
+    <dl>
+      <div><dt>Cliente</dt><dd>Poket (poket.me)</dd></div>
+      <div><dt>Sector</dt><dd>Links en bio, tiendas online e invitaciones digitales para LATAM</dd></div>
+      <div><dt>Año y plataforma</dt><dd>2026 · web, primero el teléfono</dd></div>
+      <div><dt>Alcance</dt><dd>UX/UI de crear y editar, QA de inicio a fin y SEO</dd></div>
+    </dl>
+    <p class="ctx lead">Poket ya tenía plantillas buenas. El problema estaba entre elegir la plantilla y publicar: pantallas genéricas para casos distintos, campos escondidos y ningún botón claro para compartir. Una pareja que quería su invitación de boda abría un editor pensado para links de Instagram.</p>
+  </div>
+</section>
+
+<section class="reto">
+  <div class="wrap">
+    <h2>El reto</h2>
+    <p class="lead">Así se veían las tres etapas a 390 px antes del cambio. Cada lista sale de recorrerlas como un usuario nuevo y medir.</p>
+    <div class="reto-grid">
+      <div class="reto-item">
+        <div class="phone"><img src="img/crear-antes-boda.webp" alt="Creador antes: paso Reclama tu nombre" width="780" height="1688" loading="lazy"></div>
+        <h3>Crear la cuenta</h3>
+        <ol>
+          <li>Prometía «Gratis para siempre. Sin tarjeta» incluso a quien venía de una invitación, que necesita Pro para publicar.</li>
+          <li>Nunca pedía los nombres, la fecha ni el lugar: la invitación quedaba con los datos de la demo.</li>
+          <li>Botón gris «Continuar» sin decir qué faltaba, y la cabecera cortada a 800 px.</li>
+        </ol>
+      </div>
+      <div class="reto-item">
+        <div class="phone"><img src="img/editor-antes-boda.webp" alt="Editor antes: una boda abría en Mis links vacío" width="780" height="1688" loading="lazy"></div>
+        <h3>Editar una invitación</h3>
+        <ol>
+          <li>La boda abría en «Mis links» vacío; la pestaña Invitación era la 5.ª de 7.</li>
+          <li>Los nombres estaban a 2.313 px de scroll y la música a 7.910 px.</li>
+          <li>No había forma real de compartir: «Publicar» pedía correo y contraseña otra vez.</li>
+          <li>94 campos con letra menor de 16 px: el iPhone hace zoom en cada uno.</li>
+        </ol>
+      </div>
+      <div class="reto-item">
+        <div class="phone"><img src="img/tienda-antes-mitienda.webp" alt="Panel de tienda antes: Mi tienda" width="780" height="1688" loading="lazy"></div>
+        <h3>Armar la tienda</h3>
+        <ol>
+          <li>«Mi tienda» medía 7.734 px y mostraba Premium y temas antes que el nombre y el WhatsApp.</li>
+          <li>«Tareas para lanzar» daba por hechos el diseño y los pagos solo porque la plantilla los traía.</li>
+          <li>«Compartir» desaparecía en cuanto llegaba el primer pedido.</li>
+          <li>Palabras de programador: hero, tagline, respaldo.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="obj">
+  <div class="wrap">
+    <h2>Objetivos</h2>
+    <p class="lead">Cuatro metas que se pueden comprobar en el teléfono, sin opiniones de por medio.</p>
+    <div class="obj-grid">
+      <div class="obj-card"><b>0</b><p>toques para llegar a los nombres de una invitación recién creada.</p></div>
+      <div class="obj-card"><b>1</b><p>toque para compartir la página o la tienda por WhatsApp.</p></div>
+      <div class="obj-card"><b>16 px</b><p>mínimo en cada campo de texto, para que el teléfono no haga zoom.</p></div>
+      <div class="obj-card"><b>0</b><p>errores de JavaScript y nada de scroll lateral a 390, 800 y 1440 px.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="research">
+  <div class="wrap">
+    <h2>Research</h2>
+    <p class="lead">Antes de tocar el diseño se revisó todo lo que ya estaba publicado, rama por rama, con navegador de verdad.</p>
+    <div class="cards">
+      <div class="card"><div class="num">150</div><p>demos de plantillas abiertas una por una (102 de perfil e invitación, 48 de tienda). Ninguna rota.</p><div class="src">QA del 22-nov-2026</div></div>
+      <div class="card"><div class="num">31</div><p>páginas de carta QR, citas, reseñas y cobros probadas como si el usuario estuviera en México y en Perú.</p><div class="src">QA del 22-nov-2026</div></div>
+      <div class="card"><div class="num">14 de 24</div><p>perfiles reales seguían con la bio de ejemplo o vacíos. Señal clara de que la gente no terminaba de editar.</p><div class="src">API de Poket, 22-nov-2026</div></div>
+      <div class="card"><div class="num">132</div><p>de 387 sesiones llegaron desde asistentes de IA en 28 días. El canal que más crece no es Google.</p><div class="src">GA4, 28 días al 21-nov-2026</div></div>
+      <div class="card"><div class="num">95</div><p>de 100 en la auditoría técnica: el SEO de base estaba bien, el freno estaba dentro del producto.</p><div class="src">jev-seo, 22-nov-2026 (auditoría parcial)</div></div>
+      <div class="card"><div class="num">4</div><p>fallos de precio y país corregidos de paso: en México, citas mostraba «S/ 59» en vez de $299.</p><div class="src">QA del 22-nov-2026</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="flujos">
+  <div class="wrap">
+    <h2>Arquitectura y flujos</h2>
+    <p class="lead">El cambio de fondo: cada tipo de página tiene su propio camino y el editor sabe qué estás haciendo.</p>
+    <div class="flujo">
+      <h3>Invitación antes</h3>
+      <div class="pasos"><span class="paso">Tipo</span><span class="flecha">→</span><span class="paso">Landing</span><span class="flecha">→</span><span class="paso">Cuenta</span><span class="flecha">→</span><span class="paso">Nicho</span><span class="flecha">→</span><span class="paso">Plantilla</span><span class="flecha">→</span><span class="paso mal">Editor en «Mis links»</span></div>
+      <h3>Invitación después</h3>
+      <div class="pasos"><span class="paso">Tipo y diseño</span><span class="flecha">→</span><span class="paso">Nombres, fecha y lugar</span><span class="flecha">→</span><span class="paso">Cuenta</span><span class="flecha">→</span><span class="paso bien">Editor con guía de 8 pasos</span></div>
+      <h3>Link en bio</h3>
+      <div class="pasos"><span class="paso">Tipo</span><span class="flecha">→</span><span class="paso">Plantilla</span><span class="flecha">→</span><span class="paso">Tus datos</span><span class="flecha">→</span><span class="paso">Cuenta</span><span class="flecha">→</span><span class="paso bien">«Tu página ya está publicada»</span></div>
+      <h3>Tienda</h3>
+      <div class="pasos"><span class="paso mal">Tareas que solo cambiaban de pestaña</span><span class="flecha">→</span><span class="paso bien">«Tu tienda está lista al 67 %» y un botón que abre el campo exacto</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="wire">
+  <div class="wrap">
+    <h2>Wireframes</h2>
+    <p class="lead">Baja fidelidad de las tres pantallas que más cambian.</p>
+    <div class="wf-grid">
+      <figure><div class="wf"><div class="t"></div><div class="s"></div><div class="row"><div class="n"></div><div class="s" style="width:50%"></div></div><div class="f"></div><div class="f"></div><div class="row"><div class="f" style="flex:1"></div><div class="f" style="flex:1"></div></div><div class="f"></div><div class="btn"></div></div><figcaption>Creador: un paso, un botón negro, vista previa con la plantilla elegida.</figcaption></figure>
+      <figure><div class="wf"><div class="row"><div class="t" style="width:55%"></div><div class="chip on" style="margin-left:auto"></div></div><div class="row"><div class="chip on"></div><div class="chip"></div><div class="chip"></div></div><div class="t" style="width:60%;margin-top:10px"></div><div class="row"><div class="n"></div><div class="s" style="width:60%"></div></div><div class="f"></div><div class="f"></div><div class="row"><div class="n o"></div><div class="s" style="width:40%"></div></div><div class="f"></div></div><figcaption>Editor: guía fija con pasos numerados y «Compartir» siempre a la vista.</figcaption></figure>
+      <figure><div class="wf"><div class="t" style="width:65%"></div><div class="bar"><i></i></div><div class="f" style="height:96px;background:#23221f"></div><div class="row"><div class="n o"></div><div class="s" style="width:70%"></div></div><div class="row"><div class="n"></div><div class="s" style="width:55%"></div></div><div class="row"><div class="n"></div><div class="s" style="width:62%"></div></div><div class="btn"></div></div><figcaption>Tienda: progreso, siguiente paso destacado y lista de tareas con destino real.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="sistema">
+  <div class="wrap">
+    <h2>Sistema visual</h2>
+    <p class="lead">No se inventó una marca nueva: se ordenó la que Poket ya tenía en producción, con sus mismos colores y su misma letra.</p>
+    <div class="pal">
+      <div class="sw"><i style="background:#ffdf3f"></i><div><b>Amarillo</b>#FFDF3F</div></div>
+      <div class="sw"><i style="background:#161513"></i><div><b>Tinta</b>#161513</div></div>
+      <div class="sw"><i style="background:#f7f6f2"></i><div><b>Crema</b>#F7F6F2</div></div>
+      <div class="sw"><i style="background:#ffffff"></i><div><b>Blanco</b>#FFFFFF</div></div>
+      <div class="sw"><i style="background:#e9e6df"></i><div><b>Línea</b>#E9E6DF</div></div>
+      <div class="sw"><i style="background:#71706c"></i><div><b>Texto suave</b>#71706C</div></div>
+      <div class="sw"><i style="background:#0aa14a"></i><div><b>Guardado</b>#0AA14A</div></div>
+    </div>
+    <div class="tipo">
+      <div class="aa">Aa</div>
+      <ul>
+        <li><b style="font-size:30px;font-weight:800">Bricolage Grotesque 800</b><span>Títulos y pasos. Es la letra de Poket desde su rediseño de julio.</span></li>
+        <li><b style="font-size:22px;font-weight:600">Bricolage Grotesque 600</b><span>Botones, etiquetas y el estado «Guardado».</span></li>
+        <li><b style="font-size:18px;font-weight:400">Bricolage Grotesque 400, 16-18 px</b><span>Texto y campos. Nunca menos de 16 px en un campo.</span></li>
+      </ul>
+    </div>
+    <div class="comp">
+      <button class="b1" type="button">Crear mi cuenta</button>
+      <button class="b2" type="button">Verla completa</button>
+      <span class="step"><i>1</i>Nombres y fecha</span>
+      <span class="estado">Guardado</span>
+    </div>
+    <p class="grid-note">Rejilla: una columna con 16 px de margen en el teléfono; en escritorio, panel a la izquierda y vista previa a la derecha. Zonas táctiles de 44 px como mínimo.</p>
+  </div>
+</section>
+
+<section class="pantallas">
+  <div class="wrap">
+    <h2>Pantallas</h2>
+    <p class="lead">Capturas reales de poket.me después del cambio, tomadas el 22-nov-2026.</p>
+
+    <div class="pant-grupo">
+      <h3>Crear</h3>
+      <div class="pant">
+        <figure><div class="phone"><img src="img/crear-despues-boda-390.webp" alt="Datos de la boda con vista previa" width="780" height="1688" loading="lazy"></div><figcaption>Datos del evento con la plantilla a la vista</figcaption></figure>
+        <figure><div class="phone"><img src="img/crear-despues-xv-390.webp" alt="Datos de XV años" width="780" height="1688" loading="lazy"></div><figcaption>XV años: «Nombre de la quinceañera»</figcaption></figure>
+        <figure><div class="phone"><img src="img/editor-despues-xv-tocar.webp" alt="Tocar la vista previa lleva al campo del nombre" width="780" height="1688" loading="lazy"></div><figcaption>Tocar la vista previa lleva al campo</figcaption></figure>
+        <figure><div class="phone"><img src="img/editor-despues-compartir.webp" alt="Diálogo Compartir de la invitación" width="780" height="1688" loading="lazy"></div><figcaption>Compartir: link, WhatsApp y QR</figcaption></figure>
+      </div>
+      <div class="browser wide"><div class="bar"><b></b><b></b><b></b></div><img src="img/crear-despues-boda-cuenta-800.webp" alt="Paso de cuenta para una boda, con aviso honesto de Poket Pro" width="1600" height="1000" loading="lazy"></div>
+    </div>
+
+    <div class="pant-grupo">
+      <h3>Tienda</h3>
+      <div class="pant">
+        <figure><div class="phone"><img src="img/tienda-despues-siguiente.webp" alt="Agregar producto desde Siguiente paso" width="780" height="1688" loading="lazy"></div><figcaption>«Siguiente paso» abre el formulario</figcaption></figure>
+        <figure><div class="phone"><img src="img/tienda-despues-marca.webp" alt="Datos y marca primero" width="780" height="1688" loading="lazy"></div><figcaption>Tu marca primero, con el logo a la vista</figcaption></figure>
+        <figure><div class="phone"><img src="img/tienda-despues-guardado.webp" alt="Estado Guardado" width="780" height="1688" loading="lazy"></div><figcaption>Siempre se ve si se guardó</figcaption></figure>
+        <figure><div class="phone"><img src="img/tienda-despues-secciones.webp" alt="Añadir sección con widgets" width="780" height="1688" loading="lazy"></div><figcaption>Secciones nuevas, gratis y Pro</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="pant-grupo">
+      <h3>Escritorio</h3>
+      <div class="browser wide"><div class="bar"><b></b><b></b><b></b></div><img src="img/editor-despues-boda-escritorio.webp" alt="Editor de boda en escritorio con guía y vista previa" width="1600" height="1000" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<section class="ad">
+  <div class="wrap">
+    <h2>Antes / después</h2>
+    <p class="lead">Arrastra la línea amarilla sobre cada teléfono.</p>
+    <div class="ad-grid">
+      <div>
+        <div class="cmp"><div class="vw"><img src="img/editor-antes-xv.webp" alt="Editor de XV años antes" loading="lazy"><img class="despues" src="img/editor-despues-xv.webp" alt="Editor de XV años después" loading="lazy"><span class="linea"></span><input type="range" min="0" max="100" value="50" aria-label="Comparar editor de XV años antes y después"></div></div>
+        <div class="cmp-et"><span>Antes</span><span>Editor de XV años</span><span>Después</span></div>
+      </div>
+      <div>
+        <div class="cmp"><div class="vw"><img src="img/tienda-antes-mitienda.webp" alt="Mi tienda antes" loading="lazy"><img class="despues" src="img/tienda-despues-marca.webp" alt="Mi tienda después" loading="lazy"><span class="linea"></span><input type="range" min="0" max="100" value="50" aria-label="Comparar Mi tienda antes y después"></div></div>
+        <div class="cmp-et"><span>Antes</span><span>Mi tienda</span><span>Después</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="motion">
+  <div class="wrap">
+    <h2>Motion</h2>
+    <p class="lead">Movimiento solo donde ayuda a entender qué pasó. Se apaga si el teléfono pide menos animación.</p>
+    <div class="motion-demo">
+      <div class="md"><div class="campo-anim" aria-hidden="true"></div><div class="save" aria-hidden="true"><span class="g1">Guardando…</span><span class="g2">Guardado</span></div><p class="sm muted">Escribes y el estado cambia solo. Nada de botón «Guardar» escondido.</p></div>
+      <div class="md"><div class="chips" aria-hidden="true"><span>1 Nombres</span><span>2 Lugar</span><span>3 Fotos</span><span>4 Confirmación</span></div><p class="sm muted">La guía marca en qué paso vas; tocar la vista previa te lleva al campo.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="res">
+  <div class="wrap">
+    <h2>Resultados</h2>
+    <p class="lead">Lo que se midió en el teléfono (390 px) antes y después, el mismo día, con cuentas de prueba que luego se borraron.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Qué</th><th>Antes</th><th>Después</th></tr></thead>
+      <tbody>
+        <tr><td>Llegar a los nombres de una boda</td><td>1 toque + 2.313 px de scroll</td><td>0 toques, a 594 px</td></tr>
+        <tr><td>Llegar a la música de la invitación</td><td>7.910 px de scroll</td><td>1 toque</td></tr>
+        <tr><td>Llegar a la confirmación de asistencia</td><td>5.483 px de scroll</td><td>1 toque</td></tr>
+        <tr><td>Compartir la invitación</td><td>Sin forma real</td><td>1 toque (link, WhatsApp, QR)</td></tr>
+        <tr><td>Campos con letra menor de 16 px en el editor</td><td>94</td><td>0</td></tr>
+        <tr><td>Botones menores de 44 px en el editor</td><td>34</td><td>0</td></tr>
+        <tr><td>Textos menores de 13 px en el editor</td><td>94</td><td>0</td></tr>
+        <tr><td>Crear una invitación con la plantilla elegida</td><td>~7 toques y sin pedir nombres</td><td>2 pantallas y 4 toques, con nombres, fecha y lugar</td></tr>
+        <tr><td>Crear un link en bio</td><td>6 toques, terminaba sin confirmación</td><td>5 toques y «Tu página ya está publicada» (9 s en la prueba)</td></tr>
+        <tr><td>Llegar al logo de la tienda</td><td>1 toque + ~3 pantallas de scroll</td><td>1 toque</td></tr>
+        <tr><td>Compartir la tienda por WhatsApp</td><td>Copiar y abrir WhatsApp a mano</td><td>1 toque</td></tr>
+        <tr><td>Recorrido de la vendedora (robot QA)</td><td>—</td><td>18 de 18 pruebas bien</td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">Publicaciones y ventas: medición desde el 22-nov-2026. No se ponen cifras de conversión hasta tener al menos 28 días de datos.</p>
+  </div>
+</section>
+
+<section class="cierre">
+  <div class="wrap">
+    <h2>Créditos</h2>
+    <dl class="cred">
+      <div><dt>Dirección</dt><dd>Jose Gaspard</dd></div>
+      <div><dt>Diseño, desarrollo y QA</dt><dd>Estudio de Jose Gaspard</dd></div>
+      <div><dt>Herramientas</dt><dd>Playwright, Search Console, GA4, jev-seo</dd></div>
+    </dl>
+    <a class="b1" href="https://poket.me">Ver Poket en vivo</a>
+    <p class="lead" style="margin-top:40px;color:#3b3a36">Gracias por leer.</p>
+  </div>
+</section>
+<footer><div class="wrap">Poket · 2026</div></footer>
+
+<script>
+document.querySelectorAll('.cmp').forEach(function(c){
+  var r=c.querySelector('input');
+  function pon(){c.style.setProperty('--x',r.value+'%')}
+  r.addEventListener('input',pon);pon();
+});
+</script>
+</body>
+</html>
